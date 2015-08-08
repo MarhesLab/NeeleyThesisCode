@@ -1,0 +1,5 @@
+# run this as root
+cd ./gmp-6.0.0
+make uninstall
+cd ../glpk-4.55
+make uninstall

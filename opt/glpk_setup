@@ -1,0 +1,13 @@
+# run this as root to configure GLPK and all the stuff necessary
+cd ./gmp-6.0.0
+chmod +x configure
+./configure
+make
+make check
+make install
+cd ../glpk-4.55
+chmod +x configure
+./configure --with-gmp
+make
+make check
+make install
