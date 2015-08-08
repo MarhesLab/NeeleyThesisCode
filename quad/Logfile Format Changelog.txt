@@ -1,0 +1,30 @@
+Logfile Format Changelog
+
+*** Version 3.0 (6/15/2015) ***
+- Started recording state reference values
+	(13 values, right after IMU values)
+- Started recording state trajectory values
+	(18 values, right after reference values)
+
+
+*** Version 2.0 (5/23/2015) ***
+- Switched from using Euler angles to using quaternions
+- Increased state values size by 1 (see above)
+- Increased vicon values size by 1 (see above)
+- Started recording measured motor RPMs from Autopilot
+	(4 values, right after DMC characters)
+
+
+
+*** Version 1.0 (3/15/2015) ***
+- Started recording changes to the quadrotor's log file format
+- Current Order:
+	- 1  value: 	Time since logging started (seconds)
+	- 12 values: 	Quadrotor states (position, velocity, angles, angular velocities)
+	- 6  values:	Vicon measurements (positions, angles)
+	- 6  values: 	IMU measurements (angular velocities, linear accelerations)
+	- 4  values: 	Commanded inputs (thrust and torques)
+	- 4  values: 	Actual inputs (thrust and torques)
+	- 4  values: 	Motor Rotation Speeds (rad/s)
+	- 4  values: 	Direct Motor Command (DMC) characters
+	- 2  values:	Current and Desired flight modes (see mode definitions in "../defs.h")

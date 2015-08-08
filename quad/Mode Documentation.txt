@@ -1,0 +1,331 @@
+###############################################################################
+#   
+#    Flight Mode Descriptions
+#    By William Neeley
+#    2/15/2014
+#
+###############################################################################
+
+This document provides an overview of the various discrete modes of operation
+for the quadrotor. As the quadrotor is designed to work in tandem with a
+ground computer running a Ground Control System (GCS), most of these modes 
+(but not all) will be selectable from the GCS. For a nice and pretty table
+showing transitions between the GCS's "desired" mode and the quadrotor's
+"current" mode, see the "Mode Transition Limitation Rules" Excel document.
+
+
+
+############################
+#         Mode List        #
+############################
+
+# QUAD_OFF: Quadrotor Off
+# QUAD_IDLE: Idle Motors
+# QUAD_RAMPUP: Ramp Up Motors
+# QUAD_TAKEOFF: Take Off
+# QUAD_HOVER: Hover In Place
+# QUAD_WAYPOINT: Fly To Waypoint
+# QUAD_VELOCITY: Velocity Control
+# QUAD_FOLLOW_REF: Follow GCS Reference
+# QUAD_HEAD_HOME: Head Home
+# QUAD_LAND: Land
+# QUAD_UNSAFE: Unsafe Conditions
+# QUAD_EXITING: Shutting Down
+
+# QUAD_CYCLES: Cycle Motors
+# QUAD_LATENCY_TEST: Latency Testing
+# QUAD_DMC: Direct Motor Control
+# QUAD_ATT_CTRL: Attitude Control
+# QUAD_HEIGHT_CTRL: Height Control
+
+
+
+############################
+#     Mode Descriptions    #
+############################
+
+###   Quadrotor Off   ###
+# C++ Enumeration Name: QUAD_OFF
+# GCS Selectable:  		Yes
+# Flight Mode:   		No
+# Test Mode:   			No
+# Activation Requirements:   None
+# Directly Required for: Latency Testing
+
+This mode shuts the motors completely off and acts as the go-to safety mode 
+when things go wrong. This mode can be activated from virtually every other 
+mode, with the sole exception of the Exiting mode.
+
+This mode is capable of transitioning to the Idle Motors and Latency Testing 
+modes.
+
+
+###   Idle Motors   ###
+# C++ Enumeration Name: QUAD_IDLE
+# GCS Selectable:   	Yes
+# Flight Mode:   		No
+# Test Mode:   			No
+# Activation Requirements:   Not Flying
+# Directly Required for: Ramp Up/Take Off, all testing modes exception
+#     Latency Testing
+
+This mode commands the motors to spin at the slowest speed possible. Rather
+than immediatley turning on the motors to a high speed, it is best to idle
+the motors beforehand. As such, the quadrotor needs to be in this mode
+before Ramp Up/Take Off and any of the test modes other than Latency 
+Testing. This mode can be accessed in the Quadrotor Off, Ramp Up, and non-
+Latency Testing test modes. 
+
+
+###   Ramp Up   ###
+# C++ Enumeration Name: QUAD_RAMPUP
+# GCS Selectable:   	No
+# Flight Mode:   		No
+# Test Mode:   			No
+# Activation Requirements:   Motors Idling
+# Directly Required for: Take Off
+
+This mode speeds up the motors from the Idle speed to a pre-designated max
+speed as part of the Take Off process. The quadrotor must be in the Idle 
+mode beforehand, and upon reaching maximum speed, the mode should change to
+Take Off. When the GCS commands the quadrotor to take off, this is the
+actual mode that gets activated. 
+
+
+###   Take Off   ###
+# C++ Enumeration Name: QUAD_TAKEOFF
+# GCS Selectable:   	Yes
+# Flight Mode:   		No
+# Test Mode:   			No
+# Activation Requirements:   Ramp Up Finished
+# Directly Required for: Flight Modes
+
+This mode causes the quadrotor to take off from the ground in a controlled
+manner. Before activating this mode, the motors should have properly cycled 
+up from the idle speed to almost fast enough for lift off (i.e. Ramp Up
+should have finished). Once at a designated altitude, the quadrotor will
+automatically be commanded to hover in place. From there, various flight
+control methods can be activated. 
+
+
+###   Hover In Place   ###
+# C++ Enumeration Name: QUAD_HOVER
+# GCS Selectable:   	Yes
+# Flight Mode:   		Yes
+# Test Mode:   			No
+# Activation Requirements:   Take Off Process Finished, Flying
+# Directly Required for: Other Flight Modes
+
+This mode causes the quadrotor to try to hover in place at a given
+position. This mode will be the default mode activated after Take Off and
+after flying to a waypoint. The quadrotor must be in the air for this mode
+to activate. 
+
+
+###   Fly To Waypoint   ###
+# C++ Enumeration Name: QUAD_WAYPOINT
+# GCS Selectable:   	Yes
+# Flight Mode:   		Yes
+# Test Mode:   			No
+# Activation Requirements:   Take Off Process Finished, Flying
+# Directly Required for: Nothing
+
+This mode commands the quadrotor to move to a particular waypoint given by 
+the GCS. Once it has flown there, the quadrotor will be commanded to hover
+there. Limitations should be imposed on the GCS software to ensure the
+quadrotor does not fly into an unsafe zone.
+
+
+###   Velocity Control   ###
+# C++ Enumeration Name: QUAD_VELOCITY
+# GCS Selectable:   	Yes
+# Flight Mode:   		Yes
+# Test Mode:   			No
+# Activation Requirements:   Take Off Process Finished, Flying
+# Directly Required for: Nothing
+
+This mode commands the quadrotor to move at particular translational speeds
+given by the GCS. Hopefully, this will allow the quadrotor to be controlled
+with a joystick, a controller, or a keyboard. Limitations should be imposed
+on the GCS software to ensure the quadrotor does not fly into an unsafe 
+zone, though additional safety measures can be included on the quadrotor.
+
+
+###   Follow GCS Reference   ###
+# C++ Enumeration Name: QUAD_FOLLOW_REF
+# GCS Selectable:   	Yes
+# Flight Mode:   		Yes
+# Test Mode:   			No
+# Activation Requirements:   Take Off Process Finished, Flying
+# Directly Required for: Nothing
+
+This mode commands the quadrotor to do its best to follow a set of reference
+states given by the GCS. This should allow for various trajectory generation
+algorithms to be performed on the GCS without requiring recompilation of the
+quadrotor code. 
+
+
+###   Head Home   ###
+# C++ Enumeration Name: QUAD_HEAD_HOME
+# GCS Selectable:   	Yes
+# Flight Mode:   		Yes
+# Test Mode:   			No
+# Activation Requirements:   Take Off Process Finished, Flying
+# Directly Required for: Nothing
+
+This mode commands the quadrotor to fly to, and hover above, its initial
+take off location. Rather than having to toy around with waypoint placement,
+this should help automate the process of returning to its start location.
+
+
+###   Land   ###
+# C++ Enumeration Name: QUAD_LAND
+# GCS Selectable:   	Yes
+# Flight Mode:   		Yes
+# Test Mode:   			No
+# Activation Requirements:   Flying or Ramping Up/Taking Off
+# Directly Required for: Nothing
+
+This mode tells the quadrotor to land on the ground wherever it is located. 
+When activated, the quadrotor will slowly descend while maintaining its
+position. Upon reaching the ground, the quadrotor will shift into Idle mode.
+If activated during the Ramp Up process, the quadrotor will simply Idle.
+
+
+###   Unsafe   ###
+# C++ Enumeration Name: QUAD_UNSAFE
+# GCS Selectable:   	No
+# Flight Mode:   		Yes
+# Test Mode:   			No
+# Activation Requirements:   Flying
+# Directly Required for: Nothing
+
+This mode activates whenever the quadrotor leaves a specified region within
+the Vicon motion capture area. The limitations of this boundary are largely
+defined by the limitations of the Vicon system when capturing data through
+the safety net. The netting angle makes it difficult to track the quadrotor
+high off the ground, and camera overlap issues arise at a distance away from
+the middle. These are largely experimentally derived. 
+
+When activated, this mode will do its best to move the quadrotor back to the
+middle of the Vicon area. 
+
+
+###   Shutting Down   ###
+# C++ Enumeration Name: QUAD_EXITING
+# GCS Selectable:   	No
+# Flight Mode:   		No
+# Test Mode:   			No
+# Activation Requirements:   None
+# Directly Required for: Nothing
+
+This mode activates when the program running on the quadrotor is shutting
+down. Largely, this mode is meant to be a way to show the GCS that the on
+board program closed down of its own accord. Methods can be added to tell
+the program to shut down, though currently there are no plans to do so.
+
+
+###   Cycle Motors   ###
+# C++ Enumeration Name: QUAD_CYCLE
+# GCS Selectable:   	Yes
+# Flight Mode:   		No
+# Test Mode:   			Yes
+# Activation Requirements:   Idling or in other Test Mode (except Latency)
+# Directly Required for: Nothing
+
+This mode tells the quadrotor to iteratively cycle up the motors, starting
+with Motor #1, from an idle speed to a pre-designated speed. Once all motors
+are at full speed, the motors are slowed down to an idle speed in the same
+order. The process then repeats over and over. This was designed as a quick
+test method to verify the following:
+
+ 1) Motor command communication is good (i.e. no speed stuttering)
+ 2) Motor commands are sent in the correct order 
+ 3) Motors can properly speed up and slow down
+  
+As such, this is a good procedure to run  whenever changes/repairs are made
+to the quadrotor hardware. The quadrotor should be in the Idle mode
+
+
+###   Latency Testing   ###
+# C++ Enumeration Name: QUAD_LATENCY
+# GCS Selectable:   	Yes
+# Flight Mode:   		No
+# Test Mode:   			Yes
+# Activation Requirements:   Off
+# Directly Required for: Nothing
+
+This mode is used to help categorize the latency of the Vicon motion capture
+system. which provides useful information for controlling the quadrotor. 
+Here's a basic rundown of what happens in this mode:
+
+ 1) A circuit board with red LEDs in a particular pattern is attached to
+    the quadrotor's GPIO pin (see Vicon Latency Tester board).
+ 2) All the lights are turned off in the room
+ 3) The Vicon system's detection threshold is reduced drastically until it
+    can see the LED board while the LEDs are on
+ 4) This mode is activated
+ 5) The quadrotor turns off the LEDs and waits until it receives Vicon
+	measurements indicating it cannot see the LED board
+ 6) The time between LED shutoff and the matching Vicon measurement is 
+    recorded
+ 7) Steps 5 and 6 are repeated for the LED board being turned on
+ 8) Steps 5, 6, and 7 repeat until a desired number of points are received
+ 9) Analyze the timing to see the association between when something happens
+	and when the quadrotor receives a Vicon message indicating the event
+	happened.
+
+
+###   Direct Motor Control   ###
+# C++ Enumeration Name: QUAD_DMC
+# GCS Selectable:   	Yes
+# Flight Mode:   		No
+# Test Mode:   			Yes
+# Activation Requirements:   Idling or in other Test Mode (except Latency)
+# Directly Required for: Nothing
+
+This mode allows the motor speed commands to be set directly through the
+GCS. Possible values range between 0 and 200, with 0 being completely off,
+1 being the slowest possible speed (1200 RPM), and 200 being the fastest
+speed (8600 RPM). See information related to the AscTec SDK for more
+information. Artificial constraints may be imposed on the quadrotor to
+limit the motor speed characters to a maximum value of 150, so if it 
+doesn't go any faster past this limit, this is why. This limit can be
+removed, though you potentially risk burning out the motors/motor driver
+boards. YOU HAVE BEEN WARNED!
+
+
+###   Attitude Control   ###
+# C++ Enumeration Name: QUAD_ATT_CTRL
+# GCS Selectable:   	Yes
+# Flight Mode:   		No
+# Test Mode:   			Yes
+# Activation Requirements:   Idling or in other Test Mode (except Latency)
+# Directly Required for: Nothing
+
+This mode acts as a testing mode for tuning the quadrotor's attitude
+control. The thrust is set to a particular value, the yaw torque is set
+to zero, and a control law is used to come up with desired pitch and roll
+torques to keep the quadrotor upright. The quadrotor should be anchored to
+something that will hold it in place, yet allow it to change its attitude
+freely. There is a device in the UNM MARHES lab specifically designed for 
+this purpose, which I shall call the Quadrotor Testing Arm (I don't know
+the official terminology for it). Point is, the lab has stuff to do this!
+
+
+###   Height Control   ###
+# C++ Enumeration Name: QUAD_HEIGHT_CTRL
+# GCS Selectable:   	Yes
+# Flight Mode:   		No
+# Test Mode:   			Yes
+# Activation Requirements:   Idling or in other Test Mode (except Latency)
+# Directly Required for: Nothing
+
+This mode acts as a testing mode for tuning the quadrotor's height/altitude
+control. The yaw torque is set to zero and the pitch/roll torques are set
+through properly tuned attitude control (see above) to try to maintain a 
+perfectly level quadrotor. A reference height is set, and the quadrotor will
+do what it can to get to and maintain that height. Position and yaw control
+is largely ignored, which means a safety harness should be attached to the
+quadrotor to limit its XY motion. At present, there is not an existing 
+harness to do this, but it will be developed soon!
