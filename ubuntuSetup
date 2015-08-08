@@ -59,7 +59,7 @@ cd ../
 # Sets up GLPK (used for finding optimal yaw values)
 # Makes everything executable, configures the installation,
 # performs initial compilation, checks compilation, and finally installs
-cd ./opt/glpk-4.55/
+cd ./lib/glpk-4.55/
 chmod -R +x ./*
 ./configure
 make
@@ -69,4 +69,4 @@ cd ../..
 
 
 # Cleans up the GLPK installation process
-git checkout -- opt/glpk-4.55
+git checkout -- lib/glpk-4.55
