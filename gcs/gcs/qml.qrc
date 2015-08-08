@@ -1,0 +1,31 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>MainForm.ui.qml</file>
+        <file>pictures/pic_background.png</file>
+        <file>pictures/pic_UNM_ECE.png</file>
+        <file>StatusBar.qml</file>
+        <file>StatusBarForm.ui.qml</file>
+        <file>MotorChars.qml</file>
+        <file>MotorCharsForm.ui.qml</file>
+        <file>pictures/pic_motor_labels.png</file>
+        <file>CommStatus.qml</file>
+        <file>CommStatusForm.ui.qml</file>
+        <file>ApStatusBar.qml</file>
+        <file>ApStatusBarForm.ui.qml</file>
+        <file>StateDisplay.qml</file>
+        <file>StateDisplayForm.ui.qml</file>
+        <file>MotorSpeeds.qml</file>
+        <file>MotorSpeedsForm.ui.qml</file>
+        <file>WaypointArea.qml</file>
+        <file>WaypointAreaForm.ui.qml</file>
+        <file>pictures/pic_motorlabelsbig.png</file>
+        <file>pictures/pic_quad_bad.png</file>
+        <file>pictures/pic_quad_good.png</file>
+        <file>pictures/pic_quad_okay.png</file>
+        <file>pictures/pic_quad_waypoint.png</file>
+        <file>pictures/MarhesLogo.png</file>
+        <file>pictures/PsychicToaster.png</file>
+        <file>pictures/PsychicToasterSmall.png</file>
+    </qresource>
+</RCC>
