@@ -1,0 +1,9 @@
+# Copies the libraries to the right location
+cp ./libMatlabFunctions32.a /usr/local/lib/libMatlabFunctions32.a
+cp ./libMatlabFunctions64.a /usr/local/lib/libMatlabFunctions64.a
+cp ./libViconDataStreamSDK_CPP_32.so /usr/local/lib/libViconDataStreamSDK_CPP_32.so
+cp ./libViconDataStreamSDK_CPP_64.so /usr/local/lib/libViconDataStreamSDK_CPP_64.so
+
+# Adds the library location to the library path
+echo "/usr/local/lib" >> /etc/ld.so.conf.d/quad_libraries.conf
+ldconfig
