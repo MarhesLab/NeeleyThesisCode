@@ -40,7 +40,8 @@ sudo usermod -a -G dialout $USER
 # vim: a good command line text editor. Learn it. Love it.
 # nautilus-open-terminal: lets you right click in a folder and open the terminal there.
 # dfu-util: used for flashing the OS onto the Intel Edison
-sudo apt-get install build-essential ubuntu-restricted-extras vim nautilus-open-terminal dfu-util
+# libgl1-mesa-dev: Needed for the Ground Control Station (Qt) program
+sudo apt-get install build-essential ubuntu-restricted-extras vim nautilus-open-terminal dfu-util libgl1-mesa-dev
 
 # Resets Nautilus (the file/folder explorer) to load nautilus-open-terminal
 nautilus -q 
@@ -65,7 +66,7 @@ chmod -R +x ./*
 ./configure
 make
 make check
-make install
+sudo make install
 cd ../..
 
 

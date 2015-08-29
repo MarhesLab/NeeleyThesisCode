@@ -32,6 +32,7 @@ apt-get install opencv
 
 # Sets up some necessary libraries
 cd ./lib/
+chmod +x setupLibraries
 ./setupLibraries
 cd ../
 
