@@ -52,6 +52,7 @@ sudo apt-get install libopencv-dev
 
 # Sets up necessary libraries
 cd ./lib
+chmod +x setupLibraries
 sudo ./setupLibraries
 cd ../
 
