@@ -21,13 +21,16 @@
 # Updates applications first
 apt-get update
 
+# Do it again to make sure everything's truly up to date
+apt-get update
+
 
 # Gets NPT (used to update the clock)
 apt-get install ntp
 
 
 # Installs OpenCV
-apt-get install opencv
+apt-get install libopencv-dev
 
 
 # Sets up some necessary libraries
@@ -47,6 +50,7 @@ make
 make check
 make install
 cd ../..
+ldconfig
 
 
 # Cleans up the GLPK installation process
