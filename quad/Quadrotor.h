@@ -15,6 +15,10 @@
 #include "../thread/QuadClientThread.h"
 #include "../thread/ViconThread.h"
 
+// Testing different legacy logging methods
+#include "../legacy/Logger.h"
+#include "../legacy/Logger2.h"
+
 using namespace std;
 
 // Quadrotor Class Definition
@@ -31,7 +35,7 @@ protected:
 	enum ConnStatus viconStatus;
 
 	// Vicon-related variables
-	bool vicNew;					// indicates a Vicon measurement is new and has not1
+	bool vicNew;					// indicates a Vicon measurement is new and has not
 									// been processed before
 	bool vicActive;					// indicates new measurements arrived recently
 	bool vicValid, vicOldValid;		// indicates received values aren't phony
@@ -106,7 +110,7 @@ protected:
 	enum FlightMode previousMode;
 	
 	// Timing and Logging parameters
-	LoggerThread logthread;
+	Logger2 logger;
 	Timer logtimer;
 	
 	// Private function declarations; 

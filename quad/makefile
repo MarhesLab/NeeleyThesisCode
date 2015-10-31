@@ -15,6 +15,7 @@ CPPFLAGS = -Wall -std=c++11
 # Directories for files
 DIR_F := ../functions
 DIR_L := ../lib
+DIR_LEG := ../legacy
 DIR_M := ../matrix
 DIR_O := ../opt
 DIR_Q := .
@@ -32,7 +33,7 @@ LIB_VIC = -L$(DIR_L) -lViconDataStreamSDK_CPP_$(ARCH)
 LIB_ALL = $(LIB_OPT) $(LIB_THD) $(LIB_VIC) $(LIB_OCV) 
 
 # Object File Declarations
-OBJ_QUA = $(DIR_Q)/Quadrotor.o $(OBJ_ATH) $(OBJ_LTH) $(OBJ_QTH) $(OBJ_VTH) $(OBJ_DEF) $(OBJ_FIL) $(OBJ_MOD) $(OBJ_PAR) $(OBJ_TRA)
+OBJ_QUA = $(DIR_Q)/Quadrotor.o $(OBJ_ATH) $(OBJ_LOG) $(OBJ_QTH) $(OBJ_VTH) $(OBJ_DEF) $(OBJ_FIL) $(OBJ_MOD) $(OBJ_PAR) $(OBJ_TRA)
 
 OBJ_ATH = $(DIR_T)/AutopilotThread.o $(OBJ_AUT) $(OBJ_TIM)
 OBJ_GTH = $(DIR_T)/GcsServerThread.o $(OBJ_PAC) $(OBJ_QSE)
@@ -45,7 +46,7 @@ OBJ_CON = $(DIR_F)/Controller.o $(OBJ_YAW) $(OBJ_FBL)
 OBJ_DEF = $(DIR_TOP)/defs.o
 OBJ_FBL = $(DIR_F)/feedbackLin.o
 OBJ_FIL = $(DIR_F)/Filter3.o
-OBJ_LOG = $(DIR_F)/Logger2.o
+OBJ_LOG = $(DIR_LEG)/Logger2.o
 OBJ_MAT = $(DIR_M)/Matrix2.o
 OBJ_MOD = $(DIR_Q)/modes.o $(OBJ_CON) $(OBJ_TRJ)
 OBJ_PAC = $(DIR_S)/packet.o 
@@ -67,7 +68,8 @@ clean:
 
 cleanall: 
 	rm -rf *.o *~ mainProgram.exe
-	rm -rf $(DIR_F)/*.o $(DIR_F)/*~ 
+	rm -rf $(DIR_F)/*.o $(DIR_F)/*~
+	rm -rf $(DIR_LEG)/*.o $(DIR_LEG)/*~ 
 	rm -rf $(DIR_M)/*.o $(DIR_M)/*~
 	rm -rf $(DIR_O)/*.o $(DIR_O)/*~
 	rm -rf $(DIR_S)/*.o $(DIR_S)/*~ 

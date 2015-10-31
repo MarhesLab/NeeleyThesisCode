@@ -364,7 +364,7 @@ void Quadrotor::latencyCompensation()
 	double *Xq_current, *Xq_past, *Uq_past; 
 
 	for(int i = TIME_VIC+1; i < TIME_TOT; i++) {
-		Xq_current 	= Xq_all[i];
+		Xq_current 	= Xq_all[i]; 
 		Xq_past 	= Xq_all[i-1];
 		Uq_past 	= Uq_all[i-1];
 
@@ -478,14 +478,14 @@ void Quadrotor::sendInputs()
 void Quadrotor::startLogging()
 {
 	// Start up the multithreaded logger
-	logthread.setName("logfile_v3.0.csv");
-	logthread.initialize();
-	if(!logthread.startThread())
-		exit(-1);
+	logger.setName("logfile_v3.0.csv");
+	logger.initialize();
+	//if(!logger.startThread())
+	//	exit(-1);
 
 	// Set up log file header information
-	logthread.addLogTimeLine(); // logs the date and time in the first line
-	logthread.addTextLine("Quadrotor Log File Version: 3.0"); // lists the log file version on the second line
+	logger.addLogTimeLine(); // logs the date and time in the first line
+	logger.addTextLine("Quadrotor Log File Version: 3.0"); // lists the log file version on the second line
 	
 	// Logs the recorded quadrotor parameters on the third line
 	stringstream quad_params;
@@ -497,26 +497,26 @@ void Quadrotor::startLogging()
 		<< " L: " << setprecision(3) << Lq
 		<< " Bp: " << setprecision(12) << Bp
 		<< " Kp: " << setprecision(12) << Kp;
-	logthread.addTextLine(quad_params.str());	
+	logger.addTextLine(quad_params.str());	
 	
 	// starts naming columns on the fourth line
-	logthread.addTextBlock("seconds,");								// Time since logger started
-	logthread.addTextBlock("X,Y,Z,dX,dY,dZ,q0,qi,qj,qk,Wx,Wy,Wz,");	// Quadrotor states
-	logthread.addTextBlock("X_v,Y_v,Z_v,q0_v,qi_v,qj_v,qk_v,");		// Vicon states
-	logthread.addTextBlock("Wx_i,Wy_i,Wz_i,ddX_i,ddY_i,ddZ_i,");	// IMU states (body frame)
-	logthread.addTextBlock("Xr,Yr,Zr,dXr,dYr,dZr,");				// Reference states
-	logthread.addTextBlock("q0r,qir,qjr,qkr,Wxr,Wyr,Wzr,");
-	logthread.addTextBlock("Xt,dXt,ddXt,dddXt,ddddXt,");			// Trajectory states
-	logthread.addTextBlock("Xt,dXt,ddXt,dddXt,ddddXt,");
-	logthread.addTextBlock("Xt,dXt,ddXt,dddXt,ddddXt,");
-	logthread.addTextBlock("Ozt,dOzt,ddOzt,");
-	logthread.addTextBlock("Th_c,Tx_c,Ty_c,Tz_c,");					// Commanded input
-	logthread.addTextBlock("Th_a,Tx_a,Ty_a,Tz_a,");					// Actual input
-	logthread.addTextBlock("w1,w2,w3,w4,");							// Motor speeds
-	logthread.addTextBlock("M1,M2,M3,M4,");							// Motor DMCs
-	logthread.addTextBlock("RPM1,RPM2,RPM3,RPM4,");					// Motor RPMs (meas.)
-	logthread.addTextBlock("currentMode,desiredMode");				// Flight Modes
-	logthread.newLine();
+	logger.addTextBlock("seconds,");								// Time since logger started
+	logger.addTextBlock("X,Y,Z,dX,dY,dZ,q0,qi,qj,qk,Wx,Wy,Wz,");	// Quadrotor states
+	logger.addTextBlock("X_v,Y_v,Z_v,q0_v,qi_v,qj_v,qk_v,");		// Vicon states
+	logger.addTextBlock("Wx_i,Wy_i,Wz_i,ddX_i,ddY_i,ddZ_i,");	// IMU states (body frame)
+	logger.addTextBlock("Xr,Yr,Zr,dXr,dYr,dZr,");				// Reference states
+	logger.addTextBlock("q0r,qir,qjr,qkr,Wxr,Wyr,Wzr,");
+	logger.addTextBlock("Xt,dXt,ddXt,dddXt,ddddXt,");			// Trajectory states
+	logger.addTextBlock("Xt,dXt,ddXt,dddXt,ddddXt,");
+	logger.addTextBlock("Xt,dXt,ddXt,dddXt,ddddXt,");
+	logger.addTextBlock("Ozt,dOzt,ddOzt,");
+	logger.addTextBlock("Th_c,Tx_c,Ty_c,Tz_c,");					// Commanded input
+	logger.addTextBlock("Th_a,Tx_a,Ty_a,Tz_a,");					// Actual input
+	logger.addTextBlock("w1,w2,w3,w4,");							// Motor speeds
+	logger.addTextBlock("M1,M2,M3,M4,");							// Motor DMCs
+	logger.addTextBlock("RPM1,RPM2,RPM3,RPM4,");					// Motor RPMs (meas.)
+	logger.addTextBlock("currentMode,desiredMode");				// Flight Modes
+	logger.newLine();
 	
 	// starts logging timing
 	logtimer.tic();
@@ -533,20 +533,20 @@ void Quadrotor::logValues()
 	
 	// Starts logging values; this should match the order spelled out by the
 	// log file initializer in "startLogging()" above.
-	logthread.logDouble(logtimer.secs(), 6);
-	logthread.logDoubleArray(Xq, STATES, 5);
-	logthread.logDoubleArray(XqVicon, VIC_STATES, 5);
-	logthread.logDoubleArray(XqImu, IMU_STATES, 5);
-	logthread.logDoubleArray(XqRef, STATES, 5);
-	logthread.logDoubleArray(XqTraj, POS_REFS, 4);
-	logthread.logDoubleArray(UqCmd, INPUTS, 6);
-	logthread.logDoubleArray(Uq, INPUTS, 6);
-	logthread.logDoubleArray(omega, MOTORS, 5);
-	logthread.logUCharArray(motorDMCs, MOTORS);
-	logthread.logDoubleArray(motorRPMs, MOTORS, 6);
-	logthread.logInt(currentMode);
-	logthread.logInt(desiredMode);
-	logthread.newLine();
+	logger.logDouble(logtimer.secs(), 6);
+	logger.logDoubleArray(Xq, STATES, 5);
+	logger.logDoubleArray(XqVicon, VIC_STATES, 5);
+	logger.logDoubleArray(XqImu, IMU_STATES, 5);
+	logger.logDoubleArray(XqRef, STATES, 5);
+	logger.logDoubleArray(XqTraj, POS_REFS, 4);
+	logger.logDoubleArray(UqCmd, INPUTS, 6);
+	logger.logDoubleArray(Uq, INPUTS, 6);
+	logger.logDoubleArray(omega, MOTORS, 5);
+	logger.logUCharArray(motorDMCs, MOTORS);
+	logger.logDoubleArray(motorRPMs, MOTORS, 6);
+	logger.logInt(currentMode);
+	logger.logInt(desiredMode);
+	logger.newLine();
 }
 
 
